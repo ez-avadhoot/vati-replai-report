@@ -1,0 +1,549 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vati vs Replai · Marathon inbound WhatsApp</title>
+<style>
+.viz-root {
+  color-scheme: light;
+  --page: #f9f9f7; --surface-1: #fcfcfb;
+  --text-primary: #0b0b0b; --text-secondary: #52514e; --text-muted: #898781;
+  --grid: #e1e0d9; --axis: #c3c2b7; --border: rgba(11,11,11,0.10);
+  --replai: #2a78d6; --vati: #eb6834;
+  --s3: #1baf7a; --s4: #eda100; --s5: #e87ba4; --s7: #6250d6; --neutral: #898781;
+  --good: #006300; --critical: #d03b3b; --warning: #fab219;
+  --wash: rgba(42,120,214,0.08);
+}
+@media (prefers-color-scheme: dark) {
+  :root:where(:not([data-theme="light"])) .viz-root {
+    color-scheme: dark;
+    --page: #0d0d0d; --surface-1: #1a1a19;
+    --text-primary: #f0efec; --text-secondary: #c3c2b7; --text-muted: #898781;
+    --grid: #2c2c2a; --axis: #383835; --border: rgba(255,255,255,0.10);
+    --replai: #3987e5; --vati: #d95926; --s3: #199e70; --s4: #c98500; --s5: #d55181; --s7: #9085e9; --neutral: #6b6a66;
+    --good: #0ca30c; --wash: rgba(57,135,229,0.12);
+  }
+}
+:root[data-theme="dark"] .viz-root {
+  color-scheme: dark;
+  --page: #0d0d0d; --surface-1: #1a1a19;
+  --text-primary: #f0efec; --text-secondary: #c3c2b7; --text-muted: #898781;
+  --grid: #2c2c2a; --axis: #383835; --border: rgba(255,255,255,0.10);
+  --replai: #3987e5; --vati: #d95926; --s3: #199e70; --s4: #c98500; --s5: #d55181; --s7: #9085e9; --neutral: #6b6a66;
+  --good: #0ca30c; --wash: rgba(57,135,229,0.12);
+}
+* { box-sizing: border-box; }
+body { margin: 0; }
+.viz-root {
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  background: var(--page); color: var(--text-primary);
+  min-height: 100vh; padding: 40px 24px 64px; line-height: 1.45;
+}
+.wrap { max-width: 1080px; margin: 0 auto; }
+header { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap; }
+h1 { font-size: 28px; font-weight: 650; margin: 0 0 4px; letter-spacing: -0.01em; }
+h2 { font-size: 18px; font-weight: 600; margin: 0 0 4px; }
+.sub { color: var(--text-secondary); font-size: 14px; margin: 0; }
+.muted { color: var(--text-muted); font-size: 12px; }
+.pill { font-size: 12px; color: var(--text-secondary); border: 1px solid var(--border); border-radius: 999px; padding: 3px 10px; white-space: nowrap; }
+.theme-btn { font: inherit; font-size: 12px; background: var(--surface-1); color: var(--text-secondary); border: 1px solid var(--border); border-radius: 999px; padding: 3px 10px; cursor: pointer; }
+section { margin-top: 36px; }
+.card { background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+.grid { display: grid; gap: 12px; }
+.g4 { grid-template-columns: repeat(4, 1fr); }
+.g3 { grid-template-columns: repeat(3, 1fr); }
+.g2 { grid-template-columns: repeat(2, 1fr); }
+@media (max-width: 860px) { .g4 { grid-template-columns: repeat(2, 1fr); } .g3, .g2 { grid-template-columns: 1fr; } }
+.tile .label { font-size: 13px; color: var(--text-secondary); }
+.tile .value { font-size: 34px; font-weight: 600; margin: 6px 0 2px; letter-spacing: -0.02em; }
+.tile .vs { font-size: 13px; color: var(--text-secondary); }
+.tile .flag { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; margin-top: 8px; color: var(--text-primary); }
+.flag .dot { width: 8px; height: 8px; border-radius: 50%; }
+.dot.good { background: #0ca30c; } .dot.bad { background: var(--critical); } .dot.warn { background: var(--warning); }
+.hero { display: flex; gap: 28px; align-items: center; flex-wrap: wrap; }
+.hero .big { font-size: 64px; font-weight: 650; letter-spacing: -0.03em; line-height: 1; }
+.legend { display: flex; gap: 16px; flex-wrap: wrap; font-size: 13px; color: var(--text-secondary); margin: 10px 0 4px; }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.sw { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
+.lk { width: 16px; height: 2px; display: inline-block; border-radius: 2px; }
+svg { display: block; width: 100%; height: auto; overflow: visible; }
+svg text { font-family: inherit; }
+.mark { cursor: default; }
+.mark:hover, .mark:focus { filter: brightness(1.12); outline: none; }
+#tip { position: fixed; pointer-events: none; z-index: 10; background: var(--surface-1); border: 1px solid var(--border);
+  border-radius: 8px; padding: 8px 10px; font-size: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.12); opacity: 0; transition: opacity .1s; min-width: 120px; }
+#tip .t { color: var(--text-secondary); margin-bottom: 4px; }
+#tip .r { display: flex; align-items: center; gap: 8px; }
+#tip .r b { font-size: 14px; color: var(--text-primary); }
+#tip .r span { color: var(--text-secondary); }
+.journey { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0; margin-top: 14px; }
+@media (max-width: 860px) { .journey { grid-template-columns: 1fr; } }
+.step { padding: 14px 14px 14px 0; border-top: 2px solid var(--grid); position: relative; }
+.step::before { content: ""; position: absolute; top: -6px; left: 0; width: 10px; height: 10px; border-radius: 50%; background: var(--replai); box-shadow: 0 0 0 2px var(--surface-1); }
+.step.bad::before { background: var(--critical); }
+.step .when { font-size: 12px; color: var(--text-muted); }
+.step .what { font-size: 22px; font-weight: 600; margin: 4px 0 2px; }
+.step .desc { font-size: 13px; color: var(--text-secondary); }
+.recs { counter-reset: r; display: grid; gap: 10px; }
+.rec { display: flex; gap: 14px; align-items: flex-start; }
+.rec::before { counter-increment: r; content: counter(r); flex: none; width: 26px; height: 26px; border-radius: 50%; background: var(--wash); color: var(--replai); font-weight: 650; font-size: 13px; display: grid; place-items: center; }
+.rec b { display: block; font-weight: 600; }
+.rec span { color: var(--text-secondary); font-size: 14px; }
+details { margin-top: 14px; }
+summary { cursor: pointer; font-size: 13px; color: var(--text-secondary); }
+table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 10px; }
+th, td { text-align: left; padding: 7px 8px; border-bottom: 1px solid var(--grid); }
+td.n, th.n { text-align: right; font-variant-numeric: tabular-nums; }
+th { color: var(--text-secondary); font-weight: 600; }
+ul.caveats { margin: 8px 0 0; padding-left: 18px; color: var(--text-secondary); font-size: 13px; }
+ul.caveats li { margin: 3px 0; }
+@media print { .theme-btn { display: none; } .card { break-inside: avoid; } }
+</style>
+</head>
+<body>
+<div class="viz-root">
+<div class="wrap">
+
+<header>
+  <div>
+    <h1>Vati vs Replai</h1>
+    <p class="sub">Marathon · inbound WhatsApp enquiries · ad enquiries compared like for like</p>
+  </div>
+  <div style="display:flex;gap:8px;align-items:center">
+    <span class="pill">Internal draft · 23 Oct 2026</span>
+    <button class="theme-btn" id="themeBtn" type="button">Toggle theme</button>
+  </div>
+</header>
+
+<div class="legend" style="margin-top:18px">
+  <span><i class="sw" style="background:var(--vati)"></i>Vati · 2,217 ad enquiries · Oct 2025 – Apr 2026</span>
+  <span><i class="sw" style="background:var(--replai)"></i>Replai · 782 ad enquiries · Aug – Oct 2026</span>
+</div>
+
+<!-- Headline -->
+<section>
+  <div class="card hero">
+    <div>
+      <div class="big">2 sec</div>
+      <div class="sub">median time to a real answer on Replai, at any hour</div>
+    </div>
+    <div class="sub" style="max-width:420px">
+      Replai answers instantly, answers questions properly twice as often, and needs a person half as often.
+      It converts fewer chats into a <b style="color:var(--text-primary)">call or site visit</b>, and
+      <b style="color:var(--text-primary)">the agent handover</b> loses most leads.
+    </div>
+  </div>
+  <div class="grid g4" style="margin-top:12px">
+    <div class="card tile"><div class="label">Useful reply within 5 min</div><div class="value">100%</div><div class="vs">Vati 90%</div><div class="flag"><i class="dot good"></i>Better</div></div>
+    <div class="card tile"><div class="label">Bot couldn't handle it</div><div class="value">20%</div><div class="vs">Vati 43%</div><div class="flag"><i class="dot good"></i>Better</div></div>
+    <div class="card tile"><div class="label">Agent messages per 100 enquiries</div><div class="value">98</div><div class="vs">Vati 144 · −32%</div><div class="flag"><i class="dot good"></i>Better</div></div>
+    <div class="card tile"><div class="label">AI cost per enquiry (Oct)</div><div class="value">≤ ₹27</div><div class="vs">≤ $0.30, before caching</div><div class="flag"><i class="dot good"></i>Low</div></div>
+    <div class="card tile"><div class="label">Customers who reply to the agent</div><div class="value">11%</div><div class="vs">Vati 30%</div><div class="flag"><i class="dot bad"></i>Worse</div></div>
+    <div class="card tile"><div class="label">Chats inviting a site visit</div><div class="value">8%</div><div class="vs">Vati 91%</div><div class="flag"><i class="dot bad"></i>Worse</div></div>
+    <div class="card tile"><div class="label">Median time to a human</div><div class="value">1.3 h</div><div class="vs">Vati 16 min · by design</div><div class="flag"><i class="dot warn"></i>Slower</div></div>
+    <div class="card tile"><div class="label">Agent pickup of handoffs</div><div class="value">91%</div><div class="vs">Vati 79%</div><div class="flag"><i class="dot good"></i>Better</div></div>
+  </div>
+</section>
+
+<!-- Scorecard chart -->
+<section>
+  <div class="card">
+    <h2>Scorecard</h2>
+    <p class="sub">Share of ad enquiries. The arrow shows which direction is better.</p>
+    <div class="legend">
+      <span><i class="sw" style="background:var(--vati)"></i>Vati</span>
+      <span><i class="sw" style="background:var(--replai)"></i>Replai</span>
+    </div>
+    <div id="scorecard"></div>
+    <details>
+      <summary>Show as table</summary>
+      <table id="scoreTable"><thead><tr><th>KPI</th><th class="n">Vati</th><th class="n">Replai</th></tr></thead><tbody></tbody></table>
+    </details>
+  </div>
+</section>
+
+<!-- After hours + handoff -->
+<section class="grid g2">
+  <div class="card">
+    <h2>Useful reply within 5 minutes</h2>
+    <p class="sub">By when the customer first wrote (all inbound traffic)</p>
+    <div class="legend">
+      <span><i class="sw" style="background:var(--vati)"></i>Vati</span>
+      <span><i class="sw" style="background:var(--replai)"></i>Replai</span>
+    </div>
+    <div id="hours"></div>
+    <p class="muted">49% of Replai enquiries arrive outside 9am–7pm. Vati sent "no agents available" to 3–14% of chats a month.</p>
+  </div>
+  <div class="card">
+    <h2>Why Replai hands chats to agents</h2>
+    <p class="sub">All Marathon conversations on Replai, by latest handoff reason</p>
+    <div id="reasons" style="margin-top:22px"></div>
+    <div class="legend" id="reasonLegend" style="flex-direction:column;gap:8px;margin-top:16px"></div>
+    <p class="muted">Two thirds is Marathon's rule that routes any chat quiet for about 60 min to sales, which is a lead handover rather than a bot failure.</p>
+  </div>
+</section>
+
+<!-- Quality -->
+<section>
+  <div class="card">
+    <h2>Conversation quality</h2>
+    <p class="sub">AI review of 800 sampled ad enquiries (400 per system, blind) · share of genuine leads · whiskers = 95% confidence interval</p>
+    <div class="legend">
+      <span><i class="sw" style="background:var(--vati)"></i>Vati</span>
+      <span><i class="sw" style="background:var(--replai)"></i>Replai</span>
+    </div>
+    <div id="quality"></div>
+    <details>
+      <summary>Show as table</summary>
+      <table id="qualityTable"><thead><tr><th>Metric</th><th class="n">Vati</th><th class="n">Replai</th></tr></thead><tbody></tbody></table>
+    </details>
+  </div>
+  <div class="grid g3" style="margin-top:12px">
+    <div class="card tile"><div class="label">Call or visit agreed</div><div class="value">5%</div><div class="vs">Vati 13%</div><div class="flag"><i class="dot bad"></i>Worse</div></div>
+    <div class="card tile"><div class="label">Vati's next steps that came from a one-tap button</div><div class="value">37 of 50</div><div class="vs">"Request a call back" / "Schedule Visit" · Replai has none</div><div class="flag"><i class="dot warn"></i>Gap to close</div></div>
+    <div class="card tile"><div class="label">Customer silent after the first exchange</div><div class="value">75%</div><div class="vs">Vati 66%</div><div class="flag"><i class="dot bad"></i>Worse</div></div>
+  </div>
+</section>
+
+<!-- Journey -->
+<section>
+  <div class="card">
+    <h2>Where Replai leads go cold</h2>
+    <p class="sub">A typical Replai ad enquiry that reaches an agent (83% of chats)</p>
+    <div class="journey">
+      <div class="step"><div class="when">0 sec</div><div class="what">Enquiry</div><div class="desc">"I'd like to learn more about Nexzone"</div></div>
+      <div class="step"><div class="when">+2 sec</div><div class="what">Bot answers</div><div class="desc">Brochure, prices, qualifying question · 2.6 answers on average</div></div>
+      <div class="step"><div class="when">+60 min</div><div class="what">Chat goes quiet</div><div class="desc">Routed to the sales queue</div></div>
+      <div class="step bad"><div class="when">+33 min in queue</div><div class="what">"May I know your requirement?"</div><div class="desc">84% of agent openers are this generic line</div></div>
+      <div class="step bad"><div class="when">outcome</div><div class="what">11% reply</div><div class="desc">vs 30% on Vati, where the agent is the first real contact</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- Volume + cost -->
+<section class="grid g2">
+  <div class="card">
+    <h2>Inbound conversations per month</h2>
+    <p class="sub">All inbound traffic on each number · Oct 2026 partial</p>
+    <div class="legend">
+      <span><i class="lk" style="background:var(--vati)"></i>Vati</span>
+      <span><i class="lk" style="background:var(--replai)"></i>Replai</span>
+    </div>
+    <div id="volume"></div>
+    <p class="muted">The systems ran in parallel. Ad enquiries moved to Replai; Vati kept the lead-form traffic.</p>
+  </div>
+  <div class="card">
+    <h2>Replai AI cost per month</h2>
+    <p class="sub">USD, list price assuming no prompt caching (upper bound)</p>
+    <div id="cost"></div>
+    <p class="muted">With full prompt caching, October would be about $14 instead of $128. Our logs don't record cache hits yet.</p>
+  </div>
+</section>
+
+<!-- Recommendations -->
+<section>
+  <div class="card">
+    <h2>What to fix, in order</h2>
+    <div class="recs" style="margin-top:14px">
+      <div class="rec"><div><b>Make calls and site visits one tap away</b><span>Add "Book a site visit" / "Call me" buttons to the first answer, invite every qualified lead, and track visits and calls agreed.</span></div></div>
+      <div class="rec"><div><b>Fix the handover</b><span>Give agents the bot's summary, drop the generic opener, route high-intent chats immediately, and call instead of messaging again.</span></div></div>
+      <div class="rec"><div><b>Stop re-asking</b><span>The bot asks again for budget or configuration already given in 8% of leads.</span></div></div>
+      <div class="rec"><div><b>Handle voice notes</b><span>20 of the 68 unanswered Replai chats ended on an audio message.</span></div></div>
+      <div class="rec"><div><b>Cover evenings</b><span>An evening enquiry waits about 10 h for a person on both systems; let the bot book the call or visit.</span></div></div>
+      <div class="rec"><div><b>Log cached tokens</b><span>Turns the cost range into one real number.</span></div></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="card">
+    <h2>Read with care</h2>
+    <ul class="caveats">
+      <li>Replai is young: 782 ad enquiries over 3 months, still ramping (143 → 290 → 420 a month).</li>
+      <li>Agents join Replai chats only after the customer has gone quiet, so part of the 11% reply gap is selection.</li>
+      <li>The quality review checks consistency within a chat, not prices against Marathon's price sheet. Each system's style is recognisable, so it isn't fully blind.</li>
+      <li>No outcome data yet. Site visits and bookings need Marathon's CRM; cost per lead needs the Vati invoice and agent cost.</li>
+      <li>Inbound = the customer wrote first, with no message from Marathon in the previous 72 h; 24 h of silence starts a new conversation.</li>
+    </ul>
+  </div>
+</section>
+
+</div>
+<div id="tip" role="tooltip"></div>
+</div>
+
+<script>
+// ---- Data (from kpis.py, 2026-10-23) ----
+const SCORE = [
+  // label, vati, replai, higherIsBetter
+  ["Useful reply within 5 min", 90, 100, true],
+  ["Bot couldn't handle it (true handoff)", 43, 20, false],
+  ["Agent pickup of handoffs", 79, 91, true],
+  ["Human takeover (≥1 agent message)", 84, 83, null],
+  ["Customer replied after first answer", 42, 40, true],
+  ["Customer replied to the agent", 30, 11, true],
+  ["Business invited a site visit", 91, 8, true],
+  ["Last message left unanswered", 7, 7, false],
+];
+const HOURS = [["Day", "9am–7pm", 64, 100], ["Evening", "7–11pm", 61, 100], ["Night", "11pm–9am", 61, 100]];
+const REASONS = [
+  ["Routed after ~60 min quiet (routine)", 68, "--neutral"],
+  ["Never handed off", 11, "--s3"],
+  ["Voice note / image / document", 10, "--s4"],
+  ["AI decided a person should help", 9, "--s5"],
+  ["System error", 2, "--s7"],
+];
+const MONTHS = ["Oct 25","Nov","Dec","Jan 26","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct 26"];
+const VOL_VATI   = [835, 921, 801, 758, 851, 1184, 1351, 1207, 1422, 1867, 1847, 2154, 1081];
+const VOL_REPLAI = [0, 0, 0, 0, 0, 0, 2, 18, 20, 107, 143, 290, 420];
+const QUALITY = [
+  // label, vati [p, lo, hi], replai [p, lo, hi], higherIsBetter
+  ["Questions fully answered", [29, 20, 40], [62, 49, 73], true],
+  ["Asked about the customer's needs", [5, 3, 7], [96, 94, 98], true],
+  ["Generic or deflecting reply", [59, 54, 64], [7, 5, 10], false],
+  ["Replies tailored to the customer", [4, 2, 6], [13, 10, 16], true],
+  ["Inconsistent details", [8, 6, 11], [4, 2, 6], false],
+  ["Re-asked info already given", [1, 0, 2], [8, 5, 11], false],
+  ["Site visit offered", [83, 79, 86], [9, 7, 12], true],
+  ["Call or visit agreed", [13, 10, 16], [5, 4, 8], true],
+  ["Hot or warm lead", [28, 24, 33], [22, 18, 26], true],
+];
+const COST = [["May", 5, 1, 18], ["Jun", 5, 1, 20], ["Jul", 22, 3, 107], ["Aug", 86, 9, 143], ["Sep", 105, 11, 290], ["Oct", 128, 14, 420]];
+
+// ---- helpers ----
+const NS = "http://www.w3.org/2000/svg";
+const css = v => getComputedStyle(document.querySelector(".viz-root")).getPropertyValue(v).trim();
+function el(tag, attrs = {}, parent) {
+  const e = document.createElementNS(NS, tag);
+  for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v);
+  if (parent) parent.appendChild(e);
+  return e;
+}
+function text(parent, x, y, s, attrs = {}) {
+  const t = el("text", { x, y, "font-size": 12, fill: css("--text-secondary"), ...attrs }, parent);
+  t.textContent = s;
+  return t;
+}
+// Bar with 4px rounded data-end, square at the baseline.
+function hbarPath(x, y, w, h, r = 4) {
+  r = Math.min(r, w, h / 2);
+  return `M${x},${y}H${x + w - r}Q${x + w},${y} ${x + w},${y + r}V${y + h - r}Q${x + w},${y + h} ${x + w - r},${y + h}H${x}Z`;
+}
+function vbarPath(x, base, w, h, r = 4) {
+  r = Math.min(r, h, w / 2);
+  const top = base - h;
+  return `M${x},${base}V${top + r}Q${x},${top} ${x + r},${top}H${x + w - r}Q${x + w},${top} ${x + w},${top + r}V${base}Z`;
+}
+const tip = document.getElementById("tip");
+function showTip(evt, title, rows) {
+  tip.replaceChildren();
+  const t = document.createElement("div"); t.className = "t"; t.textContent = title; tip.appendChild(t);
+  for (const [color, value, name] of rows) {
+    const r = document.createElement("div"); r.className = "r";
+    const k = document.createElement("i"); k.className = "lk"; k.style.background = color;
+    const b = document.createElement("b"); b.textContent = value;
+    const s = document.createElement("span"); s.textContent = name;
+    r.append(k, b, s); tip.appendChild(r);
+  }
+  const x = evt.clientX ?? evt.target.getBoundingClientRect().right;
+  const y = evt.clientY ?? evt.target.getBoundingClientRect().top;
+  tip.style.left = Math.min(x + 14, innerWidth - tip.offsetWidth - 8) + "px";
+  tip.style.top = (y + 14) + "px";
+  tip.style.opacity = 1;
+}
+const hideTip = () => (tip.style.opacity = 0);
+// Label ink inside a coloured fill: white or near-black by the fill's luminance.
+function inkOn(hex) {
+  const [r, g, b] = [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16) / 255)
+    .map(c => (c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4));
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b > 0.25 ? "#0b0b0b" : "#ffffff";
+}
+function hoverable(node, title, rows) {
+  node.classList.add("mark");
+  node.setAttribute("tabindex", "0");
+  node.setAttribute("aria-label", `${title}: ${rows.map(r => r[2] + " " + r[1]).join(", ")}`);
+  const on = e => showTip(e, title, rows.map(([v, val, n]) => [css(v), val, n]));
+  node.addEventListener("pointermove", on);
+  node.addEventListener("focus", on);
+  node.addEventListener("pointerleave", hideTip);
+  node.addEventListener("blur", hideTip);
+}
+
+// ---- charts ----
+function scorecard() {
+  const W = 1000, labelW = 300, rowH = 54, barH = 14, gap = 2, plotW = W - labelW - 60;
+  const H = SCORE.length * rowH + 24;
+  const svg = el("svg", { viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": "Scorecard: Vati vs Replai" });
+  [0, 25, 50, 75, 100].forEach(t => {
+    const x = labelW + plotW * t / 100;
+    el("line", { x1: x, x2: x, y1: 0, y2: H - 20, stroke: css(t ? "--grid" : "--axis"), "stroke-width": 1 }, svg);
+    text(svg, x, H - 4, t + "%", { "text-anchor": "middle", fill: css("--text-muted"), "font-size": 11 });
+  });
+  SCORE.forEach(([label, v, r, hib], i) => {
+    const y0 = i * rowH + 10;
+    text(svg, 0, y0 + 14, label, { fill: css("--text-primary"), "font-size": 13 });
+    const dir = hib === null ? "neutral" : hib ? "↑ higher is better" : "↓ lower is better";
+    text(svg, 0, y0 + 31, dir, { fill: css("--text-muted"), "font-size": 11 });
+    const g = el("g", {}, svg);
+    [["--vati", v, "Vati", 0], ["--replai", r, "Replai", barH + gap]].forEach(([c, val, name, off]) => {
+      const w = Math.max(plotW * val / 100, 2);
+      el("path", { d: hbarPath(labelW, y0 + off, w, barH), fill: css(c) }, g);
+      text(g, labelW + w + 6, y0 + off + barH - 3, val + "%", { fill: css("--text-primary"), "font-size": 12 });
+    });
+    el("rect", { x: labelW, y: y0 - 4, width: plotW + 40, height: barH * 2 + gap + 8, fill: "transparent" }, g);
+    hoverable(g, label, [["--vati", v + "%", "Vati"], ["--replai", r + "%", "Replai"]]);
+  });
+  document.getElementById("scorecard").replaceChildren(svg);
+  const tb = document.querySelector("#scoreTable tbody"); tb.replaceChildren();
+  SCORE.forEach(([l, v, r]) => {
+    const tr = document.createElement("tr");
+    [l, v + "%", r + "%"].forEach((s, j) => { const td = document.createElement("td"); td.textContent = s; if (j) td.className = "n"; tr.appendChild(td); });
+    tb.appendChild(tr);
+  });
+}
+
+function hours() {
+  const W = 480, H = 240, top = 20, base = 200, left = 34, bw = 22, gap = 2;
+  const svg = el("svg", { viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": "Useful reply within 5 minutes by time of day" });
+  [0, 50, 100].forEach(t => {
+    const y = base - (base - top) * t / 100;
+    el("line", { x1: left, x2: W, y1: y, y2: y, stroke: css(t ? "--grid" : "--axis") }, svg);
+    text(svg, left - 6, y + 4, t + "%", { "text-anchor": "end", fill: css("--text-muted"), "font-size": 11 });
+  });
+  const slot = (W - left) / HOURS.length;
+  HOURS.forEach(([name, range, v, r], i) => {
+    const cx = left + slot * i + slot / 2, g = el("g", {}, svg);
+    [["--vati", v, -bw - gap / 2], ["--replai", r, gap / 2]].forEach(([c, val, off]) => {
+      const h = (base - top) * val / 100;
+      el("path", { d: vbarPath(cx + off, base, bw, h), fill: css(c) }, g);
+      text(g, cx + off + bw / 2, base - h - 6, val + "%", { "text-anchor": "middle", fill: css("--text-primary") });
+    });
+    el("rect", { x: cx - slot / 2 + 8, y: top - 10, width: slot - 16, height: base - top + 10, fill: "transparent" }, g);
+    text(svg, cx, base + 18, name, { "text-anchor": "middle", fill: css("--text-primary") });
+    text(svg, cx, base + 33, range, { "text-anchor": "middle", fill: css("--text-muted"), "font-size": 11 });
+    hoverable(g, `${name} (${range})`, [["--vati", v + "%", "Vati"], ["--replai", r + "%", "Replai"]]);
+  });
+  document.getElementById("hours").replaceChildren(svg);
+}
+
+function reasons() {
+  const W = 480, H = 34, gap = 2;
+  const svg = el("svg", { viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": "Replai handoff reasons" });
+  let x = 0;
+  const total = REASONS.reduce((a, r) => a + r[1], 0);
+  REASONS.forEach(([name, v, c], i) => {
+    const w = W * v / total - (i < REASONS.length - 1 ? gap : 0);
+    const last = i === REASONS.length - 1, first = i === 0;
+    const r = el("rect", { x, y: 0, width: Math.max(w, 1), height: H, fill: css(c), rx: first || last ? 4 : 0 }, svg);
+    if (w > 40) text(svg, x + 8, H / 2 + 4, v + "%", { fill: inkOn(css(c)), "font-size": 12, "font-weight": 600 });
+    hoverable(r, name, [[c, v + "%", "of conversations"]]);
+    x += w + gap;
+  });
+  document.getElementById("reasons").replaceChildren(svg);
+  const lg = document.getElementById("reasonLegend"); lg.replaceChildren();
+  REASONS.forEach(([name, v, c]) => {
+    const s = document.createElement("span");
+    const sw = document.createElement("i"); sw.className = "sw"; sw.style.background = `var(${c})`;
+    const b = document.createElement("b"); b.textContent = v + "%"; b.style.cssText = "color:var(--text-primary);min-width:34px";
+    s.append(sw, b, document.createTextNode(name)); lg.appendChild(s);
+  });
+}
+
+function volume() {
+  const W = 480, H = 240, top = 16, base = 200, left = 40, right = 14;
+  const svg = el("svg", { viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": "Inbound conversations per month" });
+  const max = 2500, xs = i => left + (W - left - right) * i / (MONTHS.length - 1), ys = v => base - (base - top) * v / max;
+  [0, 1000, 2000].forEach(t => {
+    el("line", { x1: left, x2: W - right, y1: ys(t), y2: ys(t), stroke: css(t ? "--grid" : "--axis") }, svg);
+    text(svg, left - 6, ys(t) + 4, t ? t / 1000 + "K" : "0", { "text-anchor": "end", fill: css("--text-muted"), "font-size": 11 });
+  });
+  [0, 3, 6, 9, 12].forEach(i => text(svg, xs(i), base + 18, MONTHS[i], { "text-anchor": "middle", fill: css("--text-muted"), "font-size": 11 }));
+  const cross = el("line", { y1: top, y2: base, stroke: css("--axis"), opacity: 0 }, svg);
+  [[VOL_VATI, "--vati"], [VOL_REPLAI, "--replai"]].forEach(([d, c]) => {
+    el("path", { d: d.map((v, i) => (i ? "L" : "M") + xs(i) + "," + ys(v)).join(""), fill: "none", stroke: css(c), "stroke-width": 2, "stroke-linejoin": "round", "stroke-linecap": "round" }, svg);
+    const i = d.length - 1;
+    el("circle", { cx: xs(i), cy: ys(d[i]), r: 4, fill: css(c), stroke: css("--surface-1"), "stroke-width": 2 }, svg);
+  });
+  text(svg, xs(12) - 8, ys(VOL_VATI[12]) - 10, "1,081", { "text-anchor": "end", fill: css("--text-primary") });
+  text(svg, xs(12) - 8, ys(VOL_REPLAI[12]) + 18, "420", { "text-anchor": "end", fill: css("--text-primary") });
+  const hit = el("rect", { x: left, y: top, width: W - left - right, height: base - top, fill: "transparent" }, svg);
+  hit.addEventListener("pointermove", e => {
+    const p = svg.createSVGPoint(); p.x = e.clientX; p.y = e.clientY;
+    const loc = p.matrixTransform(svg.getScreenCTM().inverse());
+    const i = Math.max(0, Math.min(MONTHS.length - 1, Math.round((loc.x - left) / ((W - left - right) / (MONTHS.length - 1)))));
+    cross.setAttribute("x1", xs(i)); cross.setAttribute("x2", xs(i)); cross.setAttribute("opacity", 1);
+    showTip(e, MONTHS[i], [[css("--vati"), VOL_VATI[i].toLocaleString(), "Vati"], [css("--replai"), VOL_REPLAI[i].toLocaleString(), "Replai"]]);
+  });
+  hit.addEventListener("pointerleave", () => { cross.setAttribute("opacity", 0); hideTip(); });
+  document.getElementById("volume").replaceChildren(svg);
+}
+
+function cost() {
+  const W = 480, H = 240, top = 20, base = 200, left = 40, bw = 24;
+  const svg = el("svg", { viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": "Replai AI cost per month" });
+  const max = 150, ys = v => (base - top) * v / max;
+  [0, 50, 100, 150].forEach(t => {
+    const y = base - ys(t);
+    el("line", { x1: left, x2: W, y1: y, y2: y, stroke: css(t ? "--grid" : "--axis") }, svg);
+    text(svg, left - 6, y + 4, "$" + t, { "text-anchor": "end", fill: css("--text-muted"), "font-size": 11 });
+  });
+  const slot = (W - left) / COST.length;
+  COST.forEach(([m, hi, lo, convs], i) => {
+    const cx = left + slot * i + slot / 2, g = el("g", {}, svg);
+    el("path", { d: vbarPath(cx - bw / 2, base, bw, Math.max(ys(hi), 2)), fill: css("--replai") }, g);
+    text(g, cx, base - ys(hi) - 6, "$" + hi, { "text-anchor": "middle", fill: css("--text-primary") });
+    text(svg, cx, base + 18, m, { "text-anchor": "middle", fill: css("--text-muted"), "font-size": 11 });
+    el("rect", { x: cx - slot / 2 + 6, y: top, width: slot - 12, height: base - top, fill: "transparent" }, g);
+    hoverable(g, `${m} 2026 · ${convs} enquiries`, [["--replai", "$" + hi, "no caching"], ["--replai", "$" + lo, "fully cached"], ["--replai", "$" + (hi / convs).toFixed(2), "max per enquiry"]]);
+  });
+  document.getElementById("cost").replaceChildren(svg);
+}
+
+const forced = new URLSearchParams(location.search).get("theme");
+if (forced === "light" || forced === "dark") document.documentElement.dataset.theme = forced;
+function quality() {
+  const W = 1000, labelW = 300, rowH = 54, barH = 12, gap = 2, plotW = W - labelW - 70;
+  const H = QUALITY.length * rowH + 24, xs = v => labelW + plotW * v / 100;
+  const svg = el("svg", { viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": "Conversation quality: Vati vs Replai" });
+  [0, 25, 50, 75, 100].forEach(t => {
+    el("line", { x1: xs(t), x2: xs(t), y1: 0, y2: H - 20, stroke: css(t ? "--grid" : "--axis") }, svg);
+    text(svg, xs(t), H - 4, t + "%", { "text-anchor": "middle", fill: css("--text-muted"), "font-size": 11 });
+  });
+  QUALITY.forEach(([label, v, r, hib], i) => {
+    const y0 = i * rowH + 10, g = el("g", {}, svg);
+    text(svg, 0, y0 + 13, label, { fill: css("--text-primary"), "font-size": 13 });
+    text(svg, 0, y0 + 30, hib ? "↑ higher is better" : "↓ lower is better", { fill: css("--text-muted"), "font-size": 11 });
+    [["--vati", v, 0], ["--replai", r, barH + gap + 4]].forEach(([c, [p, lo, hi], off]) => {
+      const y = y0 + off;
+      el("path", { d: hbarPath(labelW, y, Math.max(xs(p) - labelW, 2), barH), fill: css(c) }, g);
+      const wy = y + barH / 2;
+      el("line", { x1: xs(lo), x2: xs(hi), y1: wy, y2: wy, stroke: css("--text-secondary"), "stroke-width": 1 }, g);
+      [lo, hi].forEach(b => el("line", { x1: xs(b), x2: xs(b), y1: wy - 4, y2: wy + 4, stroke: css("--text-secondary"), "stroke-width": 1 }, g));
+      text(g, Math.max(xs(hi), xs(p)) + 6, y + barH - 2, p + "%", { fill: css("--text-primary") });
+    });
+    el("rect", { x: labelW, y: y0 - 4, width: plotW + 60, height: barH * 2 + gap + 12, fill: "transparent" }, g);
+    hoverable(g, label, [["--vati", `${v[0]}% (${v[1]}–${v[2]})`, "Vati"], ["--replai", `${r[0]}% (${r[1]}–${r[2]})`, "Replai"]]);
+  });
+  document.getElementById("quality").replaceChildren(svg);
+  const tb = document.querySelector("#qualityTable tbody"); tb.replaceChildren();
+  QUALITY.forEach(([l, v, r]) => {
+    const tr = document.createElement("tr");
+    [l, `${v[0]}% (${v[1]}–${v[2]})`, `${r[0]}% (${r[1]}–${r[2]})`].forEach((s, j) => { const td = document.createElement("td"); td.textContent = s; if (j) td.className = "n"; tr.appendChild(td); });
+    tb.appendChild(tr);
+  });
+}
+
+function renderAll() { scorecard(); hours(); reasons(); quality(); volume(); cost(); }
+renderAll();
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change", renderAll);
+document.getElementById("themeBtn").addEventListener("click", () => {
+  const dark = document.documentElement.dataset.theme
+    ? document.documentElement.dataset.theme === "dark"
+    : matchMedia("(prefers-color-scheme: dark)").matches;
+  document.documentElement.dataset.theme = dark ? "light" : "dark";
+  renderAll();
+});
+</script>
+</body>
+</html>
