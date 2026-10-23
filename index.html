@@ -3,14 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Vati vs Replai · Marathon inbound WhatsApp</title>
+<title>Wati vs Replai · Marathon inbound WhatsApp</title>
 <style>
 .viz-root {
   color-scheme: light;
   --page: #f9f9f7; --surface-1: #fcfcfb;
   --text-primary: #0b0b0b; --text-secondary: #52514e; --text-muted: #898781;
   --grid: #e1e0d9; --axis: #c3c2b7; --border: rgba(11,11,11,0.10);
-  --replai: #2a78d6; --vati: #eb6834;
+  --replai: #2a78d6; --wati: #eb6834;
   --s3: #1baf7a; --s4: #eda100; --s5: #e87ba4; --s7: #6250d6; --neutral: #898781;
   --good: #006300; --critical: #d03b3b; --warning: #fab219;
   --wash: rgba(42,120,214,0.08);
@@ -21,7 +21,7 @@
     --page: #0d0d0d; --surface-1: #1a1a19;
     --text-primary: #f0efec; --text-secondary: #c3c2b7; --text-muted: #898781;
     --grid: #2c2c2a; --axis: #383835; --border: rgba(255,255,255,0.10);
-    --replai: #3987e5; --vati: #d95926; --s3: #199e70; --s4: #c98500; --s5: #d55181; --s7: #9085e9; --neutral: #6b6a66;
+    --replai: #3987e5; --wati: #d95926; --s3: #199e70; --s4: #c98500; --s5: #d55181; --s7: #9085e9; --neutral: #6b6a66;
     --good: #0ca30c; --wash: rgba(57,135,229,0.12);
   }
 }
@@ -30,7 +30,7 @@
   --page: #0d0d0d; --surface-1: #1a1a19;
   --text-primary: #f0efec; --text-secondary: #c3c2b7; --text-muted: #898781;
   --grid: #2c2c2a; --axis: #383835; --border: rgba(255,255,255,0.10);
-  --replai: #3987e5; --vati: #d95926; --s3: #199e70; --s4: #c98500; --s5: #d55181; --s7: #9085e9; --neutral: #6b6a66;
+  --replai: #3987e5; --wati: #d95926; --s3: #199e70; --s4: #c98500; --s5: #d55181; --s7: #9085e9; --neutral: #6b6a66;
   --good: #0ca30c; --wash: rgba(57,135,229,0.12);
 }
 * { box-sizing: border-box; }
@@ -107,7 +107,7 @@ ul.caveats li { margin: 3px 0; }
 
 <header>
   <div>
-    <h1>Vati vs Replai</h1>
+    <h1>Wati vs Replai</h1>
     <p class="sub">Marathon · inbound WhatsApp enquiries · ad enquiries compared like for like</p>
   </div>
   <div style="display:flex;gap:8px;align-items:center">
@@ -117,7 +117,7 @@ ul.caveats li { margin: 3px 0; }
 </header>
 
 <div class="legend" style="margin-top:18px">
-  <span><i class="sw" style="background:var(--vati)"></i>Vati · 2,217 ad enquiries · Oct 2025 – Apr 2026</span>
+  <span><i class="sw" style="background:var(--wati)"></i>Wati · 2,217 ad enquiries · Oct 2025 – Apr 2026</span>
   <span><i class="sw" style="background:var(--replai)"></i>Replai · 782 ad enquiries · Aug – Oct 2026</span>
 </div>
 
@@ -135,14 +135,14 @@ ul.caveats li { margin: 3px 0; }
     </div>
   </div>
   <div class="grid g4" style="margin-top:12px">
-    <div class="card tile"><div class="label">Useful reply within 5 min</div><div class="value">100%</div><div class="vs">Vati 90%</div><div class="flag"><i class="dot good"></i>Better</div></div>
-    <div class="card tile"><div class="label">Bot couldn't handle it</div><div class="value">20%</div><div class="vs">Vati 43%</div><div class="flag"><i class="dot good"></i>Better</div></div>
-    <div class="card tile"><div class="label">Agent messages per 100 enquiries</div><div class="value">98</div><div class="vs">Vati 144 · −32%</div><div class="flag"><i class="dot good"></i>Better</div></div>
+    <div class="card tile"><div class="label">Useful reply within 5 min</div><div class="value">100%</div><div class="vs">Wati 90%</div><div class="flag"><i class="dot good"></i>Better</div></div>
+    <div class="card tile"><div class="label">Bot couldn't handle it</div><div class="value">20%</div><div class="vs">Wati 43%</div><div class="flag"><i class="dot good"></i>Better</div></div>
+    <div class="card tile"><div class="label">Agent messages per 100 enquiries</div><div class="value">98</div><div class="vs">Wati 144 · −32%</div><div class="flag"><i class="dot good"></i>Better</div></div>
     <div class="card tile"><div class="label">AI cost per enquiry (Oct)</div><div class="value">≤ ₹27</div><div class="vs">≤ $0.30, before caching</div><div class="flag"><i class="dot good"></i>Low</div></div>
-    <div class="card tile"><div class="label">Customers who reply to the agent</div><div class="value">11%</div><div class="vs">Vati 30%</div><div class="flag"><i class="dot bad"></i>Worse</div></div>
-    <div class="card tile"><div class="label">Chats inviting a site visit</div><div class="value">8%</div><div class="vs">Vati 91%</div><div class="flag"><i class="dot bad"></i>Worse</div></div>
-    <div class="card tile"><div class="label">Median time to a human</div><div class="value">1.3 h</div><div class="vs">Vati 16 min · by design</div><div class="flag"><i class="dot warn"></i>Slower</div></div>
-    <div class="card tile"><div class="label">Agent pickup of handoffs</div><div class="value">91%</div><div class="vs">Vati 79%</div><div class="flag"><i class="dot good"></i>Better</div></div>
+    <div class="card tile"><div class="label">Customers who reply to the agent</div><div class="value">11%</div><div class="vs">Wati 30%</div><div class="flag"><i class="dot bad"></i>Worse</div></div>
+    <div class="card tile"><div class="label">Chats inviting a site visit</div><div class="value">8%</div><div class="vs">Wati 91%</div><div class="flag"><i class="dot bad"></i>Worse</div></div>
+    <div class="card tile"><div class="label">Median time to a human</div><div class="value">1.3 h</div><div class="vs">Wati 16 min · by design</div><div class="flag"><i class="dot warn"></i>Slower</div></div>
+    <div class="card tile"><div class="label">Agent pickup of handoffs</div><div class="value">91%</div><div class="vs">Wati 79%</div><div class="flag"><i class="dot good"></i>Better</div></div>
   </div>
 </section>
 
@@ -152,13 +152,13 @@ ul.caveats li { margin: 3px 0; }
     <h2>Scorecard</h2>
     <p class="sub">Share of ad enquiries. The arrow shows which direction is better.</p>
     <div class="legend">
-      <span><i class="sw" style="background:var(--vati)"></i>Vati</span>
+      <span><i class="sw" style="background:var(--wati)"></i>Wati</span>
       <span><i class="sw" style="background:var(--replai)"></i>Replai</span>
     </div>
     <div id="scorecard"></div>
     <details>
       <summary>Show as table</summary>
-      <table id="scoreTable"><thead><tr><th>KPI</th><th class="n">Vati</th><th class="n">Replai</th></tr></thead><tbody></tbody></table>
+      <table id="scoreTable"><thead><tr><th>KPI</th><th class="n">Wati</th><th class="n">Replai</th></tr></thead><tbody></tbody></table>
     </details>
   </div>
 </section>
@@ -169,11 +169,11 @@ ul.caveats li { margin: 3px 0; }
     <h2>Useful reply within 5 minutes</h2>
     <p class="sub">By when the customer first wrote (all inbound traffic)</p>
     <div class="legend">
-      <span><i class="sw" style="background:var(--vati)"></i>Vati</span>
+      <span><i class="sw" style="background:var(--wati)"></i>Wati</span>
       <span><i class="sw" style="background:var(--replai)"></i>Replai</span>
     </div>
     <div id="hours"></div>
-    <p class="muted">49% of Replai enquiries arrive outside 9am–7pm. Vati sent "no agents available" to 3–14% of chats a month.</p>
+    <p class="muted">49% of Replai enquiries arrive outside 9am–7pm. Wati sent "no agents available" to 3–14% of chats a month.</p>
   </div>
   <div class="card">
     <h2>Why Replai hands chats to agents</h2>
@@ -190,19 +190,19 @@ ul.caveats li { margin: 3px 0; }
     <h2>Conversation quality</h2>
     <p class="sub">AI review of 800 sampled ad enquiries (400 per system, blind) · share of genuine leads · whiskers = 95% confidence interval</p>
     <div class="legend">
-      <span><i class="sw" style="background:var(--vati)"></i>Vati</span>
+      <span><i class="sw" style="background:var(--wati)"></i>Wati</span>
       <span><i class="sw" style="background:var(--replai)"></i>Replai</span>
     </div>
     <div id="quality"></div>
     <details>
       <summary>Show as table</summary>
-      <table id="qualityTable"><thead><tr><th>Metric</th><th class="n">Vati</th><th class="n">Replai</th></tr></thead><tbody></tbody></table>
+      <table id="qualityTable"><thead><tr><th>Metric</th><th class="n">Wati</th><th class="n">Replai</th></tr></thead><tbody></tbody></table>
     </details>
   </div>
   <div class="grid g3" style="margin-top:12px">
-    <div class="card tile"><div class="label">Call or visit agreed</div><div class="value">5%</div><div class="vs">Vati 13%</div><div class="flag"><i class="dot bad"></i>Worse</div></div>
-    <div class="card tile"><div class="label">Vati's next steps that came from a one-tap button</div><div class="value">37 of 50</div><div class="vs">"Request a call back" / "Schedule Visit" · Replai has none</div><div class="flag"><i class="dot warn"></i>Gap to close</div></div>
-    <div class="card tile"><div class="label">Customer silent after the first exchange</div><div class="value">75%</div><div class="vs">Vati 66%</div><div class="flag"><i class="dot bad"></i>Worse</div></div>
+    <div class="card tile"><div class="label">Call or visit agreed</div><div class="value">5%</div><div class="vs">Wati 13%</div><div class="flag"><i class="dot bad"></i>Worse</div></div>
+    <div class="card tile"><div class="label">Wati's next steps that came from a one-tap button</div><div class="value">37 of 50</div><div class="vs">"Request a call back" / "Schedule Visit" · Replai has none</div><div class="flag"><i class="dot warn"></i>Gap to close</div></div>
+    <div class="card tile"><div class="label">Customer silent after the first exchange</div><div class="value">75%</div><div class="vs">Wati 66%</div><div class="flag"><i class="dot bad"></i>Worse</div></div>
   </div>
 </section>
 
@@ -216,7 +216,7 @@ ul.caveats li { margin: 3px 0; }
       <div class="step"><div class="when">+2 sec</div><div class="what">Bot answers</div><div class="desc">Brochure, prices, qualifying question · 2.6 answers on average</div></div>
       <div class="step"><div class="when">+60 min</div><div class="what">Chat goes quiet</div><div class="desc">Routed to the sales queue</div></div>
       <div class="step bad"><div class="when">+33 min in queue</div><div class="what">"May I know your requirement?"</div><div class="desc">84% of agent openers are this generic line</div></div>
-      <div class="step bad"><div class="when">outcome</div><div class="what">11% reply</div><div class="desc">vs 30% on Vati, where the agent is the first real contact</div></div>
+      <div class="step bad"><div class="when">outcome</div><div class="what">11% reply</div><div class="desc">vs 30% on Wati, where the agent is the first real contact</div></div>
     </div>
   </div>
 </section>
@@ -227,11 +227,11 @@ ul.caveats li { margin: 3px 0; }
     <h2>Inbound conversations per month</h2>
     <p class="sub">All inbound traffic on each number · Oct 2026 partial</p>
     <div class="legend">
-      <span><i class="lk" style="background:var(--vati)"></i>Vati</span>
+      <span><i class="lk" style="background:var(--wati)"></i>Wati</span>
       <span><i class="lk" style="background:var(--replai)"></i>Replai</span>
     </div>
     <div id="volume"></div>
-    <p class="muted">The systems ran in parallel. Ad enquiries moved to Replai; Vati kept the lead-form traffic.</p>
+    <p class="muted">The systems ran in parallel. Ad enquiries moved to Replai; Wati kept the lead-form traffic.</p>
   </div>
   <div class="card">
     <h2>Replai AI cost per month</h2>
@@ -248,7 +248,7 @@ ul.caveats li { margin: 3px 0; }
       <li>Replai is young: 782 ad enquiries over 3 months, still ramping (143 → 290 → 420 a month).</li>
       <li>Agents join Replai chats only after the customer has gone quiet, so part of the 11% reply gap is selection.</li>
       <li>The quality review checks consistency within a chat, not prices against Marathon's price sheet. Each system's style is recognisable, so it isn't fully blind.</li>
-      <li>No outcome data yet. Site visits and bookings need Marathon's CRM; cost per lead needs the Vati invoice and agent cost.</li>
+      <li>No outcome data yet. Site visits and bookings need Marathon's CRM; cost per lead needs the Wati invoice and agent cost.</li>
       <li>Inbound = the customer wrote first, with no message from Marathon in the previous 72 h; 24 h of silence starts a new conversation.</li>
     </ul>
   </div>
@@ -261,7 +261,7 @@ ul.caveats li { margin: 3px 0; }
 <script>
 // ---- Data (from kpis.py, 2026-10-23) ----
 const SCORE = [
-  // label, vati, replai, higherIsBetter
+  // label, wati, replai, higherIsBetter
   ["Useful reply within 5 min", 90, 100, true],
   ["Bot couldn't handle it (true handoff)", 43, 20, false],
   ["Agent pickup of handoffs", 79, 91, true],
@@ -280,10 +280,10 @@ const REASONS = [
   ["System error", 2, "--s7"],
 ];
 const MONTHS = ["Oct 25","Nov","Dec","Jan 26","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct 26"];
-const VOL_VATI   = [835, 921, 801, 758, 851, 1184, 1351, 1207, 1422, 1867, 1847, 2154, 1081];
+const VOL_WATI   = [835, 921, 801, 758, 851, 1184, 1351, 1207, 1422, 1867, 1847, 2154, 1081];
 const VOL_REPLAI = [0, 0, 0, 0, 0, 0, 2, 18, 20, 107, 143, 290, 420];
 const QUALITY = [
-  // label, vati [p, lo, hi], replai [p, lo, hi], higherIsBetter
+  // label, wati [p, lo, hi], replai [p, lo, hi], higherIsBetter
   ["Questions fully answered", [29, 20, 40], [62, 49, 73], true],
   ["Asked about the customer's needs", [5, 3, 7], [96, 94, 98], true],
   ["Generic or deflecting reply", [59, 54, 64], [7, 5, 10], false],
@@ -359,7 +359,7 @@ function hoverable(node, title, rows) {
 function scorecard() {
   const W = 1000, labelW = 300, rowH = 54, barH = 14, gap = 2, plotW = W - labelW - 60;
   const H = SCORE.length * rowH + 24;
-  const svg = el("svg", { viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": "Scorecard: Vati vs Replai" });
+  const svg = el("svg", { viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": "Scorecard: Wati vs Replai" });
   [0, 25, 50, 75, 100].forEach(t => {
     const x = labelW + plotW * t / 100;
     el("line", { x1: x, x2: x, y1: 0, y2: H - 20, stroke: css(t ? "--grid" : "--axis"), "stroke-width": 1 }, svg);
@@ -371,13 +371,13 @@ function scorecard() {
     const dir = hib === null ? "neutral" : hib ? "↑ higher is better" : "↓ lower is better";
     text(svg, 0, y0 + 31, dir, { fill: css("--text-muted"), "font-size": 11 });
     const g = el("g", {}, svg);
-    [["--vati", v, "Vati", 0], ["--replai", r, "Replai", barH + gap]].forEach(([c, val, name, off]) => {
+    [["--wati", v, "Wati", 0], ["--replai", r, "Replai", barH + gap]].forEach(([c, val, name, off]) => {
       const w = Math.max(plotW * val / 100, 2);
       el("path", { d: hbarPath(labelW, y0 + off, w, barH), fill: css(c) }, g);
       text(g, labelW + w + 6, y0 + off + barH - 3, val + "%", { fill: css("--text-primary"), "font-size": 12 });
     });
     el("rect", { x: labelW, y: y0 - 4, width: plotW + 40, height: barH * 2 + gap + 8, fill: "transparent" }, g);
-    hoverable(g, label, [["--vati", v + "%", "Vati"], ["--replai", r + "%", "Replai"]]);
+    hoverable(g, label, [["--wati", v + "%", "Wati"], ["--replai", r + "%", "Replai"]]);
   });
   document.getElementById("scorecard").replaceChildren(svg);
   const tb = document.querySelector("#scoreTable tbody"); tb.replaceChildren();
@@ -399,7 +399,7 @@ function hours() {
   const slot = (W - left) / HOURS.length;
   HOURS.forEach(([name, range, v, r], i) => {
     const cx = left + slot * i + slot / 2, g = el("g", {}, svg);
-    [["--vati", v, -bw - gap / 2], ["--replai", r, gap / 2]].forEach(([c, val, off]) => {
+    [["--wati", v, -bw - gap / 2], ["--replai", r, gap / 2]].forEach(([c, val, off]) => {
       const h = (base - top) * val / 100;
       el("path", { d: vbarPath(cx + off, base, bw, h), fill: css(c) }, g);
       text(g, cx + off + bw / 2, base - h - 6, val + "%", { "text-anchor": "middle", fill: css("--text-primary") });
@@ -407,7 +407,7 @@ function hours() {
     el("rect", { x: cx - slot / 2 + 8, y: top - 10, width: slot - 16, height: base - top + 10, fill: "transparent" }, g);
     text(svg, cx, base + 18, name, { "text-anchor": "middle", fill: css("--text-primary") });
     text(svg, cx, base + 33, range, { "text-anchor": "middle", fill: css("--text-muted"), "font-size": 11 });
-    hoverable(g, `${name} (${range})`, [["--vati", v + "%", "Vati"], ["--replai", r + "%", "Replai"]]);
+    hoverable(g, `${name} (${range})`, [["--wati", v + "%", "Wati"], ["--replai", r + "%", "Replai"]]);
   });
   document.getElementById("hours").replaceChildren(svg);
 }
@@ -445,12 +445,12 @@ function volume() {
   });
   [0, 3, 6, 9, 12].forEach(i => text(svg, xs(i), base + 18, MONTHS[i], { "text-anchor": "middle", fill: css("--text-muted"), "font-size": 11 }));
   const cross = el("line", { y1: top, y2: base, stroke: css("--axis"), opacity: 0 }, svg);
-  [[VOL_VATI, "--vati"], [VOL_REPLAI, "--replai"]].forEach(([d, c]) => {
+  [[VOL_WATI, "--wati"], [VOL_REPLAI, "--replai"]].forEach(([d, c]) => {
     el("path", { d: d.map((v, i) => (i ? "L" : "M") + xs(i) + "," + ys(v)).join(""), fill: "none", stroke: css(c), "stroke-width": 2, "stroke-linejoin": "round", "stroke-linecap": "round" }, svg);
     const i = d.length - 1;
     el("circle", { cx: xs(i), cy: ys(d[i]), r: 4, fill: css(c), stroke: css("--surface-1"), "stroke-width": 2 }, svg);
   });
-  text(svg, xs(12) - 8, ys(VOL_VATI[12]) - 10, "1,081", { "text-anchor": "end", fill: css("--text-primary") });
+  text(svg, xs(12) - 8, ys(VOL_WATI[12]) - 10, "1,081", { "text-anchor": "end", fill: css("--text-primary") });
   text(svg, xs(12) - 8, ys(VOL_REPLAI[12]) + 18, "420", { "text-anchor": "end", fill: css("--text-primary") });
   const hit = el("rect", { x: left, y: top, width: W - left - right, height: base - top, fill: "transparent" }, svg);
   hit.addEventListener("pointermove", e => {
@@ -458,7 +458,7 @@ function volume() {
     const loc = p.matrixTransform(svg.getScreenCTM().inverse());
     const i = Math.max(0, Math.min(MONTHS.length - 1, Math.round((loc.x - left) / ((W - left - right) / (MONTHS.length - 1)))));
     cross.setAttribute("x1", xs(i)); cross.setAttribute("x2", xs(i)); cross.setAttribute("opacity", 1);
-    showTip(e, MONTHS[i], [[css("--vati"), VOL_VATI[i].toLocaleString(), "Vati"], [css("--replai"), VOL_REPLAI[i].toLocaleString(), "Replai"]]);
+    showTip(e, MONTHS[i], [[css("--wati"), VOL_WATI[i].toLocaleString(), "Wati"], [css("--replai"), VOL_REPLAI[i].toLocaleString(), "Replai"]]);
   });
   hit.addEventListener("pointerleave", () => { cross.setAttribute("opacity", 0); hideTip(); });
   document.getElementById("volume").replaceChildren(svg);
@@ -490,7 +490,7 @@ if (forced === "light" || forced === "dark") document.documentElement.dataset.th
 function quality() {
   const W = 1000, labelW = 300, rowH = 54, barH = 12, gap = 2, plotW = W - labelW - 70;
   const H = QUALITY.length * rowH + 24, xs = v => labelW + plotW * v / 100;
-  const svg = el("svg", { viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": "Conversation quality: Vati vs Replai" });
+  const svg = el("svg", { viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": "Conversation quality: Wati vs Replai" });
   [0, 25, 50, 75, 100].forEach(t => {
     el("line", { x1: xs(t), x2: xs(t), y1: 0, y2: H - 20, stroke: css(t ? "--grid" : "--axis") }, svg);
     text(svg, xs(t), H - 4, t + "%", { "text-anchor": "middle", fill: css("--text-muted"), "font-size": 11 });
@@ -499,7 +499,7 @@ function quality() {
     const y0 = i * rowH + 10, g = el("g", {}, svg);
     text(svg, 0, y0 + 13, label, { fill: css("--text-primary"), "font-size": 13 });
     text(svg, 0, y0 + 30, hib ? "↑ higher is better" : "↓ lower is better", { fill: css("--text-muted"), "font-size": 11 });
-    [["--vati", v, 0], ["--replai", r, barH + gap + 4]].forEach(([c, [p, lo, hi], off]) => {
+    [["--wati", v, 0], ["--replai", r, barH + gap + 4]].forEach(([c, [p, lo, hi], off]) => {
       const y = y0 + off;
       el("path", { d: hbarPath(labelW, y, Math.max(xs(p) - labelW, 2), barH), fill: css(c) }, g);
       const wy = y + barH / 2;
@@ -508,7 +508,7 @@ function quality() {
       text(g, Math.max(xs(hi), xs(p)) + 6, y + barH - 2, p + "%", { fill: css("--text-primary") });
     });
     el("rect", { x: labelW, y: y0 - 4, width: plotW + 60, height: barH * 2 + gap + 12, fill: "transparent" }, g);
-    hoverable(g, label, [["--vati", `${v[0]}% (${v[1]}–${v[2]})`, "Vati"], ["--replai", `${r[0]}% (${r[1]}–${r[2]})`, "Replai"]]);
+    hoverable(g, label, [["--wati", `${v[0]}% (${v[1]}–${v[2]})`, "Wati"], ["--replai", `${r[0]}% (${r[1]}–${r[2]})`, "Replai"]]);
   });
   document.getElementById("quality").replaceChildren(svg);
   const tb = document.querySelector("#qualityTable tbody"); tb.replaceChildren();
